@@ -80,8 +80,11 @@ run_flare <- function(lake_directory,
                                           openmeteo_api = config$met$openmeteo_api,
                                           model = config$met$openmeteo_model,
                                           use_archive = config$met$use_openmeteo_archive,
-                                          bucket = config$s3$drivers$bucket,
-                                          endpoint = config$s3$drivers$endpoint)
+                                          server_name = config$s3$drivers$server_name,
+                                          folder = config$s3$drivers$folder
+                                          #bucket = config$s3$drivers$bucket,
+                                          #endpoint = config$s3$drivers$endpoint
+                                          )
   }else{
 
     met_out <- FLAREr::generate_met_files_arrow(obs_met_file = obs_met_file,
@@ -92,8 +95,10 @@ run_flare <- function(lake_directory,
                                                 forecast_horizon =  config$run_config$forecast_horizon,
                                                 site_id = config$location$site_id,
                                                 use_s3 = config$met$use_met_s3,
-                                                bucket = config$s3$drivers$bucket,
-                                                endpoint = config$s3$drivers$endpoint,
+                                                server_name = config$s3$drivers$server_name,
+                                                folder = config$s3$drivers$folder
+                                                #bucket = config$s3$drivers$bucket,
+                                                #endpoint = config$s3$drivers$endpoint,
                                                 local_directory = file.path(lake_directory,config$met$local_directory),
                                                 use_forecast = config$met$use_forecasted_met,
                                                 use_ler_vars = config$met$use_ler_vars,
@@ -205,15 +210,17 @@ run_flare <- function(lake_directory,
   if(config$output_settings$evaluate_past & config$run_config$use_s3){
     past_days <- lubridate::as_date(forecast_df$reference_datetime[1]) - lubridate::days(config$run_config$forecast_horizon)
 
-    vars <- arrow_env_vars()
-    s3 <- arrow::s3_bucket(bucket = config$s3$forecasts_parquet$bucket, endpoint_override = config$s3$forecasts_parquet$endpoint)
+    #vars <- arrow_env_vars()
+    #s3 <- arrow::s3_bucket(bucket = config$s3$forecasts_parquet$bucket, endpoint_override = config$s3$forecasts_parquet$endpoint)
+    s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=config$s3$forecasts_parquet$server_name, 
+                                       faasr_prefix=config$s3$forecasts_parquet$folder)
     past_forecasts <- arrow::open_dataset(s3) |>
       dplyr::mutate(reference_date = lubridate::as_date(reference_date)) |>
       dplyr::filter(model_id == forecast_df$model_id[1],
                     site_id == forecast_df$site_id[1],
                     reference_date == past_days) |>
       dplyr::collect()
-    unset_arrow_vars(vars)
+    #unset_arrow_vars(vars)
   }else{
     past_forecasts <- NULL
   }
@@ -227,8 +234,10 @@ run_flare <- function(lake_directory,
   FLAREr::generate_forecast_score_arrow(targets_file = obs_insitu_file,
                                         forecast_df = combined_forecasts,
                                         use_s3 = config$run_config$use_s3,
-                                        bucket = config$s3$scores$bucket,
-                                        endpoint = config$s3$scores$endpoint,
+                                        server_name = config$s3$scores$server_name,
+                                        folder = config$s3$scores$folder
+                                        #bucket = config$s3$scores$bucket,
+                                        #endpoint = config$s3$scores$endpoint,
                                         local_directory = file.path(lake_directory, "scores/parquet"),
                                         variable_types = config$output_settings$variables_in_scores)
 

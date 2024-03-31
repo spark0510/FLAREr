@@ -17,8 +17,10 @@ create_inflow_outflow_files_arrow <- function(inflow_forecast_dir = NULL,
                                               forecast_horizon = 0,
                                               site_id,
                                               use_s3 = FALSE,
-                                              bucket = NULL,
-                                              endpoint = NULL,
+                                              server_name = NULL,
+                                              folder = NULL,
+                                              #bucket = NULL,
+                                              #endpoint = NULL,
                                               local_directory = NULL,
                                               use_forecast = TRUE,
                                               use_ler_vars = FALSE){
@@ -28,13 +30,15 @@ create_inflow_outflow_files_arrow <- function(inflow_forecast_dir = NULL,
   if(!is.null(inflow_forecast_dir)){
 
     if(use_s3){
-      if(is.null(bucket) | is.null(endpoint)){
+      if(is.null(server_name) | is.null(folder)){
         stop("scoring function needs bucket and endpoint if use_s3=TRUE")
       }
-      vars <- arrow_env_vars()
-      inflow_s3 <- arrow::s3_bucket(bucket = file.path(bucket, inflow_forecast_dir),
-                                    endpoint_override =  endpoint)
-      unset_arrow_vars(vars)
+      #vars <- arrow_env_vars()
+      #inflow_s3 <- arrow::s3_bucket(bucket = file.path(bucket, inflow_forecast_dir),
+      #                              endpoint_override =  endpoint)
+      inflow_s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                                faasr_prefix=file.path(folder, inflow_forecast_dir))
+      #unset_arrow_vars(vars)
     }else{
       if(is.null(local_directory)){
         stop("scoring function needs local_directory if use_s3=FALSE")

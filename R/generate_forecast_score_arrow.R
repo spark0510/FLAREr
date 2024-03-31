@@ -9,20 +9,24 @@
 generate_forecast_score_arrow <- function(targets_file,
                                           forecast_df,
                                           use_s3 = FALSE,
-                                          bucket = NULL,
-                                          endpoint = NULL,
+                                          server_name = NULL,
+                                          folder = NULL,
+                                          #bucket = NULL,
+                                          #endpoint = NULL,
                                           local_directory = NULL,
                                           variable_types = "state"){
 
 
   if(use_s3){
-    if(is.null(bucket) | is.null(endpoint)){
+    if(is.null(server_name) | is.null(folder)){
       stop("scoring function needs bucket and endpoint if use_s3=TRUE")
     }
-    vars <- arrow_env_vars()
-    output_directory <- arrow::s3_bucket(bucket = bucket,
-                                         endpoint_override =  endpoint)
-    unset_arrow_vars(vars)
+    #vars <- arrow_env_vars()
+    #output_directory <- arrow::s3_bucket(bucket = bucket,
+    #                                     endpoint_override =  endpoint)
+    output_directory <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                             faasr_prefix=folder)
+    #unset_arrow_vars(vars)
   }else{
     if(is.null(local_directory)){
       stop("scoring function needs local_directory if use_s3=FALSE")

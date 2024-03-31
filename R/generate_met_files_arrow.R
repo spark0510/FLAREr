@@ -18,8 +18,10 @@ generate_met_files_arrow <- function(obs_met_file = NULL,
                                      forecast_horizon = 0,
                                      site_id,
                                      use_s3 = FALSE,
-                                     bucket = NULL,
-                                     endpoint = NULL,
+                                     server_name = NULL,
+                                     folder = NULL,
+                                     #bucket = NULL,
+                                     #endpoint = NULL,
                                      local_directory = NULL,
                                      use_forecast = TRUE,
                                      use_ler_vars = FALSE,
@@ -49,20 +51,25 @@ generate_met_files_arrow <- function(obs_met_file = NULL,
 
       if(use_s3){
 
-      if(is.null(bucket) | is.null(endpoint)){
-        stop("inflow forecast function needs bucket and endpoint if use_s3=TRUE")
+      if(is.null(server_name) | is.null(folder)){
+        stop("inflow forecast function needs server name and folder path if use_s3=TRUE")
       }
-      vars <- FLAREr:::arrow_env_vars()
+      #vars <- FLAREr:::arrow_env_vars()
 
       if(use_hive_met){
-        forecast_dir <- arrow::s3_bucket(bucket = file.path(bucket, paste0("stage2/reference_datetime=",forecast_date),paste0("site_id=",lake_name_code)),
-                                         endpoint_override =  endpoint, anonymous = TRUE)
+        #forecast_dir <- arrow::s3_bucket(bucket = file.path(bucket, paste0("stage2/reference_datetime=",forecast_date),paste0("site_id=",lake_name_code)),
+        #                                 endpoint_override =  endpoint, anonymous = TRUE)
+        forecast_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                                     faasr_prefix=file.path(folder, paste0("stage2/reference_datetime=",forecast_date), 
+                                                                            paste0("site_id=",lake_name_code)))
       }else{
-        forecast_dir <- arrow::s3_bucket(bucket = file.path(bucket, "stage2/parquet", forecast_hour,forecast_date, lake_name_code),
-                                         endpoint_override =  endpoint, anonymous = TRUE)
+        #forecast_dir <- arrow::s3_bucket(bucket = file.path(bucket, "stage2/parquet", forecast_hour,forecast_date, lake_name_code),
+        #                                 endpoint_override =  endpoint, anonymous = TRUE)
+        forecast_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                                     faasr_prefix=file.path(folder, "stage2/parquet", forecast_hour,forecast_date, lake_name_code))
       }
 
-      FLAREr:::unset_arrow_vars(vars)
+      #FLAREr:::unset_arrow_vars(vars)
     }else{
       if(is.null(local_directory)){
         stop("inflow forecast function needs local_directory if use_s3=FALSE")
@@ -79,11 +86,15 @@ generate_met_files_arrow <- function(obs_met_file = NULL,
     if(use_s3){
 
       if(use_hive_met){
-        past_dir <- arrow::s3_bucket(bucket = file.path(bucket, paste0("stage3/site_id=",lake_name_code)),
-                                     endpoint_override =  endpoint, anonymous = TRUE)
+        #past_dir <- arrow::s3_bucket(bucket = file.path(bucket, paste0("stage3/site_id=",lake_name_code)),
+        #                             endpoint_override =  endpoint, anonymous = TRUE)
+        past_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                                 faasr_prefix=file.path(folder, paste0("stage3/site_id=",lake_name_code)))
       }else{
-        past_dir <- arrow::s3_bucket(bucket = file.path(bucket, "stage3/parquet",lake_name_code),
-                                     endpoint_override =  endpoint, anonymous = TRUE)
+        #past_dir <- arrow::s3_bucket(bucket = file.path(bucket, "stage3/parquet",lake_name_code),
+        #                             endpoint_override =  endpoint, anonymous = TRUE)
+        past_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                                 faasr_prefix=file.path(folder, "stage3/parquet",lake_name_code))
       }
 
     }else{

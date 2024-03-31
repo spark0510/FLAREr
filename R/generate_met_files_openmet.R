@@ -27,24 +27,30 @@ generate_met_files_openmet <- function(out_dir,
                                        openmeteo_api = "ensemble",
                                        model = NULL,
                                        use_archive = FALSE,
-                                       bucket = NULL,
-                                       endpoint = NULL){
+                                       server_name = NULL,
+                                       folder = NULL
+                                       #bucket = NULL,
+                                       #endpoint = NULL
+                                       ){
 
   if(openmeteo_api == "seasonal"){
 
     if(use_archive){
 
-      if(is.null(bucket)) warning("missing s3 bucket for config$s3$drivers")
-      if(is.null(endpoint)) warning("missing s3 endpoint for config$s3$drivers")
+      if(is.null(server_name)) warning("missing s3 server name for config$s3$drivers")
+      if(is.null(folder)) warning("missing s3 folder path for config$s3$drivers")
 
-      bucket <- file.path(bucket,
-                          "seasonal_forecast",
-                          "model_id=cfs",
-                          paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
-                          paste0("site_id=", site_id))
+      #bucket <- file.path(bucket,
+      #                    "seasonal_forecast",
+      #                    "model_id=cfs",
+      #                    paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+      #                    paste0("site_id=", site_id))
 
-      s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
-
+      #s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
+      s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                       faasr_prefix=file.path(folder, "seasonal_forecast", "model_id=cfs", 
+                                                              paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+                                                              paste0("site_id=", site_id)))
       df <- arrow::open_dataset(s3) |>
         dplyr::collect() |>
         mutate(model_id = "cfs",
@@ -86,14 +92,18 @@ generate_met_files_openmet <- function(out_dir,
 
     if(use_archive){
 
-      bucket <- file.path(bucket,
-                          "ensemble_forecast",
-                          paste0("model_id=",model),
-                          paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
-                          paste0("site_id=", site_id))
+      #bucket <- file.path(bucket,
+      #                    "ensemble_forecast",
+      #                    paste0("model_id=",model),
+      #                    paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+      #                    paste0("site_id=", site_id))
 
-      s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
-
+      #s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
+      s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                       faasr_prefix=file.path(folder, "ensemble_forecast", 
+                                                              paste0("model_id=",model),
+                                                              paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+                                                              paste0("site_id=", site_id)))
       df <- arrow::open_dataset(s3) |>
         dplyr::collect() |>
         mutate(model_id = model,
@@ -122,13 +132,18 @@ generate_met_files_openmet <- function(out_dir,
 
       if(use_archive){
 
-        bucket <- file.path(bucket,
-                            "ensemble_forecast",
-                            paste0("model_id=gfs_seamless"),
-                            paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
-                            paste0("site_id=", site_id))
+        #bucket <- file.path(bucket,
+        #                   "ensemble_forecast",
+        #                    paste0("model_id=gfs_seamless"),
+        #                   paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+        #                   paste0("site_id=", site_id))
 
-        s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
+        #s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
+        s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
+                                           faasr_prefix=file.path(folder, "ensemble_forecast", 
+                                                                  paste0("model_id=gfs_seamless"),
+                                                                  paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+                                                                  paste0("site_id=", site_id)))
         shortwave_df <- arrow::open_dataset(s3) |>
           dplyr::filter(variable == "shortwave_radiation") |>
           dplyr::collect() |>

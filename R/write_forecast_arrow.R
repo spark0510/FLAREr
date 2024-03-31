@@ -22,10 +22,12 @@ write_forecast_arrow <- function(da_forecast_output,
       stop("scoring function needs bucket and endpoint if use_s3=TRUE")
     }
 
-    vars <- arrow_env_vars()
-    output_directory <- arrow::s3_bucket(bucket = bucket,
-                                         endpoint_override =  endpoint)
-    on.exit(unset_arrow_vars(vars))
+    #vars <- arrow_env_vars()
+    #output_directory <- arrow::s3_bucket(bucket = bucket,
+    #                                     endpoint_override =  endpoint)
+    output_directory <- FaaSr::faasr_arrow_s3_bucket(server_name=config$s3$drivers$server_name, 
+                                                 faasr_prefix=config$s3$drivers$folder)
+    #on.exit(unset_arrow_vars(vars))
   }else{
     if(is.null(local_directory)){
       stop("scoring function needs local_directory if use_s3=FALSE")
