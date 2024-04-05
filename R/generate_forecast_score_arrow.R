@@ -25,7 +25,7 @@ generate_forecast_score_arrow <- function(targets_file,
     #output_directory <- arrow::s3_bucket(bucket = bucket,
     #                                     endpoint_override =  endpoint)
     output_directory <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
-                                             faasr_prefix=folder)
+                                                     faasr_prefix=folder)
     #unset_arrow_vars(vars)
   }else{
     if(is.null(local_directory)){

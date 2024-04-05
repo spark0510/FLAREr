@@ -133,8 +133,10 @@ run_flare <- function(lake_directory,
                                                                       forecast_horizon =  config$run_config$forecast_horizon,
                                                                       site_id = config$location$site_id,
                                                                       use_s3 = config$run_config$use_s3,
-                                                                      bucket = config$s3$inflow_drivers$bucket,
-                                                                      endpoint = config$s3$inflow_drivers$endpoint,
+                                                                      server_name = config$s3$inflow_drivers$server_name
+                                                                      folder = config$s3$inflow_drivers$folder,
+                                                                      #bucket = config$s3$inflow_drivers$bucket,
+                                                                      #endpoint = config$s3$inflow_drivers$endpoint,
                                                                       local_directory = file.path(lake_directory, config$inflow$local_directory, inflow_forecast_dir),
                                                                       use_forecast = config$inflow$use_forecasted_inflow,
                                                                       use_ler_vars = config$inflow$use_ler_vars)
@@ -199,8 +201,10 @@ run_flare <- function(lake_directory,
   message("Writing arrow forecast")
   forecast_df <- FLAREr::write_forecast_arrow(da_forecast_output = da_forecast_output,
                                               use_s3 = config$run_config$use_s3,
-                                              bucket = config$s3$forecasts_parquet$bucket,
-                                              endpoint = config$s3$forecasts_parquet$endpoint,
+                                              server_name = config$s3$forecasts_parquet$server_name
+                                              folder = config$s3$forecasts_parquet$folder
+                                              #bucket = config$s3$forecasts_parquet$bucket,
+                                              #endpoint = config$s3$forecasts_parquet$endpoint,
                                               local_directory = file.path(lake_directory, "forecasts/parquet"))
 
   rm(da_forecast_output)

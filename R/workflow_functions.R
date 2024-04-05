@@ -41,7 +41,7 @@ get_run_config <- function(configure_run_file = "configure_run.yml", lake_direct
                           #region = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[1],
                           #base_url = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[2],
                           #use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_get_files(server_name=config$s3$warm_start$server_name , 
+      FaaSr::faasr_get_file(server_name=config$s3$warm_start$server_name , 
                              remote_folder=file.path(config$s3$warm_start$folder, config$location$site_id, sim_name) , 
                              remote_file=configure_run_file , 
                              local_folder=file.path(lake_directory, "restart", config$location$site_id, sim_name), 
@@ -266,7 +266,7 @@ get_restart_file <- function(config, lake_directory){
       #                    region = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[1],
       #                    base_url = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[2],
       #                    use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_get_files(server_name=config$s3$forecasts$server_name , 
+      FaaSr::faasr_get_file(server_name=config$s3$forecasts$server_name , 
                              remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id) , 
                              remote_file=restart_file, 
                              local_folder=file.path(lake_directory, "forecasts", config$location$site_id), 
@@ -539,7 +539,7 @@ download_s3_objects <- function(lake_directory, server_name, prefix){
       #                    region = region,
       #                    base_url = base_url,
       #                    use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_get_files(server_name=server_name,
+      FaaSr::faasr_get_file(server_name=server_name,
                              remote_folder="",
                              remote_file=keys[i],
                              local_folder=file.path(lake_directory, bucket),

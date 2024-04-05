@@ -12,8 +12,10 @@
 
 write_forecast_arrow <- function(da_forecast_output,
                                  use_s3 = FALSE,
-                                 bucket = NULL,
-                                 endpoint = NULL,
+                                 server_name = NULL,
+                                 folder = NULL,
+                                 #bucket = NULL,
+                                 #endpoint = NULL,
                                  local_directory = NULL){
 
 
