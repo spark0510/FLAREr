@@ -133,7 +133,7 @@ run_flare <- function(lake_directory,
                                                                       forecast_horizon =  config$run_config$forecast_horizon,
                                                                       site_id = config$location$site_id,
                                                                       use_s3 = config$run_config$use_s3,
-                                                                      server_name = config$s3$inflow_drivers$server_name
+                                                                      server_name = config$s3$inflow_drivers$server_name,
                                                                       folder = config$s3$inflow_drivers$folder,
                                                                       #bucket = config$s3$inflow_drivers$bucket,
                                                                       #endpoint = config$s3$inflow_drivers$endpoint,
