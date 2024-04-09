@@ -165,7 +165,7 @@ get_targets <- function(lake_directory, config){
   if(config$run_config$use_s3){
     download_s3_objects(lake_directory,
                         server_name = config$s3$targets$server_name,
-                        faasr_prefix = file.path(stringr::str_split_fixed(config$s3$targets$bucket, "/", n = 2)[2], config$location$site_id))
+                        prefix = file.path(config$s3$targets$folder, config$location$site_id))
   }
 }
 
@@ -542,7 +542,7 @@ download_s3_objects <- function(lake_directory, server_name, prefix){
       FaaSr::faasr_get_file(server_name=server_name,
                              remote_folder="",
                              remote_file=keys[i],
-                             local_folder=file.path(lake_directory, bucket),
+                             local_folder=file.path(lake_directory, prefix),
                              local_file=keys[i])
     }
   }
