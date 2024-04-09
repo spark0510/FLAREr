@@ -118,7 +118,7 @@ put_targets <- function(site_id, cleaned_insitu_file = NA, cleaned_met_file = NA
                          #region = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[1],
                          #base_url = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[2],
                          #use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_put_files(server_name=config$s3$targets$server_name, 
+      FaaSr::faasr_put_file(server_name=config$s3$targets$server_name, 
                              remote_folder=file.path(config$s3$targets$folder, site_id), 
                              remote_file=basename(cleaned_insitu_file), 
                              local_folder=".", 
@@ -131,7 +131,7 @@ put_targets <- function(site_id, cleaned_insitu_file = NA, cleaned_met_file = NA
                          #region = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[1],
                          #base_url = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[2],
                          #use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_put_files(server_name=config$s3$targets$server_name, 
+      FaaSr::faasr_put_file(server_name=config$s3$targets$server_name, 
                              remote_folder=file.path(config$s3$targets$folder, site_id), 
                              remote_file=basename(cleaned_inflow_file), 
                              local_folder=".", 
@@ -144,7 +144,7 @@ put_targets <- function(site_id, cleaned_insitu_file = NA, cleaned_met_file = NA
       #                   region = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[1],
       #                   base_url = stringr::str_split_fixed(config$s3$targets$endpoint, pattern = "\\.", n = 2)[2],
       #                   use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      FaaSr::faasr_put_files(server_name=config$s3$targets$server_name, 
+      FaaSr::faasr_put_file(server_name=config$s3$targets$server_name, 
                              remote_folder=file.path(config$s3$targets$folder, site_id), 
                              remote_file=basename(cleaned_met_file), 
                              local_folder="", 
@@ -315,7 +315,7 @@ update_run_config <- function(config, lake_directory, configure_run_file = "conf
     #                   region = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[1],
     #                   base_url = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[2],
     #                   use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    FaaSr::faasr_put_files(server_name=config$s3$warm_start$server_name, 
+    FaaSr::faasr_put_file(server_name=config$s3$warm_start$server_name, 
                            remote_folder=file.path(config$s3$warm_start$folder, config$location$site_id,config$run_config$sim_name), 
                            remote_file=configure_run_file, 
                            local_folder=file.path(lake_directory,"restart",config$location$site_id,config$run_config$sim_name), 
@@ -402,7 +402,7 @@ update_run_config2 <- function(lake_directory,
     #                   region = stringr::str_split_fixed(endpoint, pattern = "\\.", n = 2)[1],
     #                   base_url = stringr::str_split_fixed(endpoint, pattern = "\\.", n = 2)[2],
     #                   use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    FaaSr::faasr_put_files(server_name=server_name, 
+    FaaSr::faasr_put_file(server_name=server_name, 
                            remote_folder=file.path(folder, site_id, sim_name), 
                            remote_file=configure_run_file, 
                            local_folder=".", 
@@ -426,7 +426,7 @@ put_forecast <- function(saved_file, eml_file_name = NULL, config){
     #                              region = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[1],
     #                              base_url = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[2],
     #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    success <- FaaSr::faasr_put_files(server_name=config$s3$forecasts$server_name, 
+    success <- FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
                                       remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
                                       remote_file=basename(saved_file), 
                                       local_folder=".", 
@@ -441,7 +441,7 @@ put_forecast <- function(saved_file, eml_file_name = NULL, config){
       #                              region = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[1],
       #                              base_url = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[2],
       #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      success <- FaaSr::faasr_put_files(server_name=config$s3$forecasts$server_name, 
+      success <- FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
                                         remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
                                         remote_file=basename(eml_file_name), 
                                         local_folder=".", 
@@ -469,7 +469,7 @@ put_score <- function(saved_file, config){
     #                              region = stringr::str_split_fixed(config$s3$scores$endpoint, pattern = "\\.", n = 2)[1],
     #                              base_url = stringr::str_split_fixed(config$s3$scores$endpoint, pattern = "\\.", n = 2)[2],
     #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    success <- FaaSr::faasr_put_files(server_name=config$s3$scores$server_name, 
+    success <- FaaSr::faasr_put_file(server_name=config$s3$scores$server_name, 
                            remote_folder=file.path(config$s3$scores$folder, config$location$site_id), 
                            remote_file=basename(saved_file), 
                            local_folder=".", 
@@ -497,7 +497,7 @@ put_forecast_csv <- function(saved_file, config){
     #                              region = stringr::str_split_fixed(config$s3$forecasts_csv$endpoint, pattern = "\\.", n = 2)[1],
     #                              base_url = stringr::str_split_fixed(config$s3$forecasts_csv$endpoint, pattern = "\\.", n = 2)[2],
     #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    success <-     FaaSr::faasr_put_files(server_name=config$s3$forecasts_csv$server_name, 
+    success <-     FaaSr::faasr_put_file(server_name=config$s3$forecasts_csv$server_name, 
                            remote_folder=file.path(config$s3$forecasts_csv$folder, config$location$site_id), 
                            remote_file=basename(saved_file), 
                            local_folder=".", 
