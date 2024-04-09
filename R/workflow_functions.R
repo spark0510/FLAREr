@@ -164,7 +164,7 @@ put_targets <- function(site_id, cleaned_insitu_file = NA, cleaned_met_file = NA
 get_targets <- function(lake_directory, config){
   if(config$run_config$use_s3){
     download_s3_objects(lake_directory,
-                        server_name = config$s3$targets$server_name
+                        server_name = config$s3$targets$server_name,
                         prefix = file.path(stringr::str_split_fixed(config$s3$targets$bucket, "/", n = 2)[2], config$location$site_id))
   }
 }
