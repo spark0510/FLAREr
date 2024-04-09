@@ -32,7 +32,7 @@ get_run_config <- function(configure_run_file = "configure_run.yml", lake_direct
     #                                                         region = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[1],
     #                                                         base_url = stringr::str_split_fixed(config$s3$warm_start$endpoint, pattern = "\\.", n = 2)[2],
     #                                                         use_https = as.logical(Sys.getenv("USE_HTTPS"))))
-    keys <- FaaSr::faasr_get_folder_list(server_name=config$s3$warm_start$server_name, prefix=file.path(config$s3$warm_start$folder, config$location$site_id, sim_name, configure_run_file))
+    keys <- FaaSr::faasr_get_folder_list(server_name=config$s3$warm_start$server_name, faasr_prefix=file.path(config$s3$warm_start$folder, config$location$site_id, sim_name, configure_run_file))
     #if(restart_exists){
     if(file.path(config$s3$warm_start$folder, config$location$site_id, sim_name, configure_run_file) %in% keys){
       #aws.s3::save_object(object = file.path(stringr::str_split_fixed(config$s3$warm_start$bucket, "/", n = 2)[2], config$location$site_id, sim_name, configure_run_file),
@@ -165,7 +165,7 @@ get_targets <- function(lake_directory, config){
   if(config$run_config$use_s3){
     download_s3_objects(lake_directory,
                         server_name = config$s3$targets$server_name,
-                        prefix = file.path(stringr::str_split_fixed(config$s3$targets$bucket, "/", n = 2)[2], config$location$site_id))
+                        faasr_prefix = file.path(stringr::str_split_fixed(config$s3$targets$bucket, "/", n = 2)[2], config$location$site_id))
   }
 }
 
