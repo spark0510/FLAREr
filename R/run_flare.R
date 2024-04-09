@@ -96,7 +96,7 @@ run_flare <- function(lake_directory,
                                                 site_id = config$location$site_id,
                                                 use_s3 = config$met$use_met_s3,
                                                 server_name = config$s3$drivers$server_name,
-                                                folder = config$s3$drivers$folder
+                                                folder = config$s3$drivers$folder,
                                                 #bucket = config$s3$drivers$bucket,
                                                 #endpoint = config$s3$drivers$endpoint,
                                                 local_directory = file.path(lake_directory,config$met$local_directory),
