@@ -201,8 +201,8 @@ run_flare <- function(lake_directory,
   message("Writing arrow forecast")
   forecast_df <- FLAREr::write_forecast_arrow(da_forecast_output = da_forecast_output,
                                               use_s3 = config$run_config$use_s3,
-                                              server_name = config$s3$forecasts_parquet$server_name
-                                              folder = config$s3$forecasts_parquet$folder
+                                              server_name = config$s3$forecasts_parquet$server_name,
+                                              folder = config$s3$forecasts_parquet$folder,
                                               #bucket = config$s3$forecasts_parquet$bucket,
                                               #endpoint = config$s3$forecasts_parquet$endpoint,
                                               local_directory = file.path(lake_directory, "forecasts/parquet"))
@@ -239,7 +239,7 @@ run_flare <- function(lake_directory,
                                         forecast_df = combined_forecasts,
                                         use_s3 = config$run_config$use_s3,
                                         server_name = config$s3$scores$server_name,
-                                        folder = config$s3$scores$folder
+                                        folder = config$s3$scores$folder,
                                         #bucket = config$s3$scores$bucket,
                                         #endpoint = config$s3$scores$endpoint,
                                         local_directory = file.path(lake_directory, "scores/parquet"),
