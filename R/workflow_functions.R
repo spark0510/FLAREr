@@ -44,7 +44,7 @@ get_run_config <- function(configure_run_file = "configure_run.yml", lake_direct
       FaaSr::faasr_get_file(server_name=config$s3$warm_start$server_name , 
                              remote_folder=file.path(config$s3$warm_start$folder, config$location$site_id, sim_name) , 
                              remote_file=configure_run_file , 
-                             local_folder=file.path(lake_directory, "restart", config$location$site_id, sim_name), 
+                             local_folder=file.path("restart", config$location$site_id, sim_name), 
                              local_file=configure_run_file )
     }else{
       yaml::write_yaml(run_config, file.path(lake_directory,"restart", config$location$site_id, sim_name, configure_run_file))
@@ -165,7 +165,8 @@ get_targets <- function(lake_directory, config){
   if(config$run_config$use_s3){
     download_s3_objects(lake_directory,
                         server_name = config$s3$targets$server_name,
-                        prefix = file.path(config$s3$targets$folder, config$location$site_id))
+                        prefix = file.path(config$s3$targets$folder, config$location$site_id),
+                        folder = config$s3$targets$folder)
   }
 }
 
@@ -269,7 +270,7 @@ get_restart_file <- function(config, lake_directory){
       FaaSr::faasr_get_file(server_name=config$s3$forecasts$server_name , 
                              remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id) , 
                              remote_file=restart_file, 
-                             local_folder=file.path(lake_directory, "forecasts", config$location$site_id), 
+                             local_folder=file.path("forecasts", config$location$site_id), 
                              local_file=restart_file)
     }
     config$run_config$restart_file <- file.path(lake_directory, "forecasts", config$location$site_id, restart_file)
@@ -426,14 +427,14 @@ put_forecast <- function(saved_file, eml_file_name = NULL, config){
     #                              region = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[1],
     #                              base_url = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[2],
     #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-    success <- FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
-                                      remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
-                                      remote_file=basename(saved_file), 
-                                      local_folder=".", 
-                                      local_file=saved_file)
-    if(success){
-      unlink(saved_file)
-    }
+    FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
+                          remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
+                          remote_file=basename(saved_file), 
+                          local_folder=".", 
+                          local_file=saved_file)
+    #if(success){
+    #  unlink(saved_file)
+    #}
     if(!is.null(eml_file_name)){
       #success <- aws.s3::put_object(file = eml_file_name,
       #                              object = file.path(stringr::str_split_fixed(config$s3$forecasts$bucket, "/", n = 2)[2], config$location$site_id, basename(eml_file_name)),
@@ -441,14 +442,14 @@ put_forecast <- function(saved_file, eml_file_name = NULL, config){
       #                              region = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[1],
       #                              base_url = stringr::str_split_fixed(config$s3$forecasts$endpoint, pattern = "\\.", n = 2)[2],
       #                              use_https = as.logical(Sys.getenv("USE_HTTPS")))
-      success <- FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
-                                        remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
-                                        remote_file=basename(eml_file_name), 
-                                        local_folder=".", 
-                                        local_file=eml_file_name)
-      if(success){
-        unlink(eml_file_name)
-      }
+      FaaSr::faasr_put_file(server_name=config$s3$forecasts$server_name, 
+                            remote_folder=file.path(config$s3$forecasts$folder, config$location$site_id), 
+                            remote_file=basename(eml_file_name), 
+                            local_folder=".", 
+                            local_file=eml_file_name)
+      #if(success){
+      #  unlink(eml_file_name)
+      #}
     }
   }
 }
@@ -520,7 +521,7 @@ put_forecast_csv <- function(saved_file, config){
 #' @return
 #' @export
 #'
-download_s3_objects <- function(lake_directory, server_name, prefix){
+download_s3_objects <- function(lake_directory, server_name, prefix, folder){
 
   #files <- aws.s3::get_bucket(bucket = bucket,
   #                            prefix = prefix,
@@ -542,8 +543,8 @@ download_s3_objects <- function(lake_directory, server_name, prefix){
       FaaSr::faasr_get_file(server_name=server_name,
                              remote_folder="",
                              remote_file=keys[i],
-                             local_folder=file.path(lake_directory, prefix),
-                             local_file=keys[i])
+                             local_folder=stringr::str_split_fixed(folder, "/", n = 2)[2],
+                             local_file=basename(as.character(keys[i])))
     }
   }
 }
@@ -697,7 +698,7 @@ check_noaa_present_arrow <- function(lake_directory, configure_run_file = "confi
 
     #forecast_dir <- arrow::s3_bucket(bucket = file.path(config$s3$drivers$bucket,  "stage2"),
     #                                     endpoint_override =  config$s3$drivers$endpoint, anonymous = TRUE)
-    forecast_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=config$s3$drivers$server_name, 
+    forecast_dir <- FaaSr::faasr_arrow_s3_bucket(server_name=config$s3$anony_drivers$server_name, 
                                                  faasr_prefix=file.path(config$s3$drivers$folder, "stage2"))
     avail_dates <- gsub("reference_datetime=", "", forecast_dir$ls())
 

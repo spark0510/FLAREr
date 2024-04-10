@@ -80,8 +80,8 @@ run_flare <- function(lake_directory,
                                           openmeteo_api = config$met$openmeteo_api,
                                           model = config$met$openmeteo_model,
                                           use_archive = config$met$use_openmeteo_archive,
-                                          server_name = config$s3$drivers$server_name,
-                                          folder = config$s3$drivers$folder
+                                          server_name = config$s3$anony_drivers$server_name,
+                                          folder = config$s3$anony_drivers$folder
                                           #bucket = config$s3$drivers$bucket,
                                           #endpoint = config$s3$drivers$endpoint
                                           )
@@ -95,8 +95,8 @@ run_flare <- function(lake_directory,
                                                 forecast_horizon =  config$run_config$forecast_horizon,
                                                 site_id = config$location$site_id,
                                                 use_s3 = config$met$use_met_s3,
-                                                server_name = config$s3$drivers$server_name,
-                                                folder = config$s3$drivers$folder,
+                                                server_name = config$s3$anony_drivers$server_name,
+                                                folder = config$s3$anony_drivers$folder,
                                                 #bucket = config$s3$drivers$bucket,
                                                 #endpoint = config$s3$drivers$endpoint,
                                                 local_directory = file.path(lake_directory,config$met$local_directory),

@@ -48,9 +48,9 @@ generate_met_files_openmet <- function(out_dir,
 
       #s3 <- arrow::s3_bucket(bucket = bucket, endpoint_override = endpoint, anonymous = TRUE)
       s3 <- FaaSr::faasr_arrow_s3_bucket(server_name=server_name, 
-                                       faasr_prefix=file.path(folder, "seasonal_forecast", "model_id=cfs", 
-                                                              paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
-                                                              paste0("site_id=", site_id)))
+                                         faasr_prefix=file.path(folder, "seasonal_forecast", "model_id=cfs", 
+                                                                paste0("reference_date=", lubridate::as_date(forecast_start_datetime)),
+                                                                paste0("site_id=", site_id)))
       df <- arrow::open_dataset(s3) |>
         dplyr::collect() |>
         mutate(model_id = "cfs",
