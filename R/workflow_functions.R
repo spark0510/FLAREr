@@ -165,8 +165,7 @@ get_targets <- function(lake_directory, config){
   if(config$run_config$use_s3){
     download_s3_objects(lake_directory,
                         server_name = config$s3$targets$server_name,
-                        prefix = file.path(config$s3$targets$folder, config$location$site_id),
-                        folder = config$s3$targets$folder)
+                        prefix = file.path(config$s3$targets$folder, config$location$site_id))
   }
 }
 
@@ -521,7 +520,7 @@ put_forecast_csv <- function(saved_file, config){
 #' @return
 #' @export
 #'
-download_s3_objects <- function(lake_directory, server_name, prefix, folder){
+download_s3_objects <- function(lake_directory, server_name, prefix){
 
   #files <- aws.s3::get_bucket(bucket = bucket,
   #                            prefix = prefix,
@@ -543,7 +542,7 @@ download_s3_objects <- function(lake_directory, server_name, prefix, folder){
       FaaSr::faasr_get_file(server_name=server_name,
                              remote_folder="",
                              remote_file=keys[i],
-                             local_folder=stringr::str_split_fixed(folder, "/", n = 2)[2],
+                             local_folder=stringr::str_split_fixed(prefix, "/", n = 2)[2],
                              local_file=basename(as.character(keys[i])))
     }
   }
