@@ -540,8 +540,8 @@ download_s3_objects <- function(lake_directory, server_name, prefix){
       #                    base_url = base_url,
       #                    use_https = as.logical(Sys.getenv("USE_HTTPS")))
       FaaSr::faasr_get_file(server_name=server_name,
-                             remote_folder="",
-                             remote_file=keys[i],
+                             remote_folder=dirname(as.character(keys[i])),
+                             remote_file=basename(as.character(keys[i])),
                              local_folder=stringr::str_split_fixed(prefix, "/", n = 2)[2],
                              local_file=basename(as.character(keys[i])))
     }
