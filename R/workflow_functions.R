@@ -235,15 +235,15 @@ set_configuration <- function(configure_run_file = "configure_run.yml", lake_dir
   config$file_path$execute_directory <- file.path(lake_directory, "flare_tempdir", config$location$site_id, config$run_config$sim_name)
   dir.create(config$file_path$execute_directory, recursive = TRUE, showWarnings = FALSE)
 
-  if(Sys.getenv(x = "AWS_ACCESS_KEY_ID") == "" & config$run_config$use_s3 == TRUE){
-    warning(paste0(" Use s3 is set to TRUE in ",file.path(lake_directory,"configuration",config_set_name,configure_run_file),
-                   "AWS_ACCESS_KEY_ID environment variable is not set.  s3 can still be used for downloading"))
-  }
+  #if(Sys.getenv(x = "AWS_ACCESS_KEY_ID") == "" & config$run_config$use_s3 == TRUE){
+  #  warning(paste0(" Use s3 is set to TRUE in ",file.path(lake_directory,"configuration",config_set_name,configure_run_file),
+  #                 "AWS_ACCESS_KEY_ID environment variable is not set.  s3 can still be used for downloading"))
+  #}
 
-  if(Sys.getenv(x = "AWS_SECRET_ACCESS_KEY") == "" & config$run_config$use_s3 == TRUE){
-    warning(paste0(" Use s3 is set to TRUE in ",file.path(lake_directory,"configuration",config_set_name,configure_run_file),
-                   "AWS_SECRET_ACCESS_KEY environment variable is not set.  s3 can still be used for downloading"))
-  }
+  #if(Sys.getenv(x = "AWS_SECRET_ACCESS_KEY") == "" & config$run_config$use_s3 == TRUE){
+  #  warning(paste0(" Use s3 is set to TRUE in ",file.path(lake_directory,"configuration",config_set_name,configure_run_file),
+  #                 "AWS_SECRET_ACCESS_KEY environment variable is not set.  s3 can still be used for downloading"))
+  #}
 
   invisible(config)
 }
