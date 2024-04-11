@@ -214,6 +214,7 @@ set_configuration <- function(configure_run_file = "configure_run.yml", lake_dir
   run_config <- yaml::read_yaml(file.path(lake_directory,"configuration",config_set_name,configure_run_file))
   config <- yaml::read_yaml(file.path(lake_directory,"configuration",config_set_name,run_config$configure_flare))
   config$run_config <- run_config
+  message("test1")
   config$file_path$qaqc_data_directory <- file.path(lake_directory, "targets", config$location$site_id)
   config$file_path$data_directory <- file.path(lake_directory, "data_raw")
   config$file_path$noaa_directory <- file.path(lake_directory, "drivers")
@@ -227,11 +228,11 @@ set_configuration <- function(configure_run_file = "configure_run.yml", lake_dir
   dir.create(config$file_path$data_directory, recursive = TRUE, showWarnings = FALSE)
   dir.create(config$file_path$noaa_directory, recursive = TRUE, showWarnings = FALSE)
   dir.create(config$file_path$inflow_directory, recursive = TRUE, showWarnings = FALSE)
-
+  message("test2")
   run_config <- get_run_config(configure_run_file, lake_directory, config, clean_start, config_set_name = config_set_name, sim_name = sim_name)
   config$run_config <- run_config
   config$file_path$restart_directory <- file.path(lake_directory, "restart", config$location$site_id, config$run_config$sim_name)
-
+  message("test3")
   config$file_path$execute_directory <- file.path(lake_directory, "flare_tempdir", config$location$site_id, config$run_config$sim_name)
   dir.create(config$file_path$execute_directory, recursive = TRUE, showWarnings = FALSE)
 
