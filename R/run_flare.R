@@ -13,7 +13,7 @@ run_flare <- function(lake_directory,
                       configure_run_file,
                       config_set_name){
 
-  FLAREr::ignore_sigpipe()
+  #FLAREr::ignore_sigpipe()
 
   config <- FLAREr::set_configuration(configure_run_file, lake_directory, config_set_name = config_set_name)
 
